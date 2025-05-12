@@ -2,38 +2,16 @@
 
 const matches = [
     {
-      id: 1,
-      image: '/images/dog1.jpg',
+      id: 7,
+      image: '/images/protection7_dog1.jpg',
       type: '강아지',
-      breed: '말티즈',
-      date: '2024-04-01',
-      location: '서울 강남구 개포동',
-      gender: '수컷',
-      colors: ['흰색', '크림'],
-      features: '왼쪽 귀에 갈색 점 있음, 사람을 잘 따름',
-    },
-    {
-      id: 2,
-      image: '/images/dog3.jpg',
-      type: '고양이',
-      breed: '코숏',
-      date: '2024-03-28',
-      location: '서울 마포구 연남동',
+      breed: '진도견',
+      date: '2025-04-24',
+      location: '성북로 60 서울농산물 앞',
       gender: '암컷',
-      colors: ['검정', '회색'],
-      features: '꼬리가 짧고 겁이 많음',
-    },
-    {
-      id: 3,
-      image: '/images/dog2.jpg',
-      type: '강아지',
-      breed: '진돗개',
-      date: '2024-04-05',
-      location: '서울 노원구 상계동',
-      gender: '암컷',
-      colors: ['갈색'],
-      features: '목줄 착용, 짖지 않음',
-    },
+      colors: ['흰색'],
+      features: '온순하며 상태 양호',
+    }
   ];
   
   export default matches;

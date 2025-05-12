@@ -1,24 +1,54 @@
 // src/pages/LoginPage.js
-import React from 'react';
+import React, { useContext, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import MenuBar from '../components/MenuBar';
+import { UserContext } from '../context/UserContext';
 import '../styles/LoginPage.css';
 
 function LoginPage() {
+  const { setUser } = useContext(UserContext);
+  const navigate = useNavigate();
+
+  const [phone, setPhone] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleLogin = (e) => {
+    e.preventDefault();
+
+    // 실제 로그인 로직 대신 가상 유저 처리
+    const loggedInUser = { phone };
+    setUser(loggedInUser);
+    localStorage.setItem('user', JSON.stringify(loggedInUser));
+    navigate('/');
+  };
+
   return (
     <div className="login-page">
       <Header />
       <MenuBar />
       <div className="login-content">
         <h2>로그인</h2>
-        <form className="login-form">
+        <form className="login-form" onSubmit={handleLogin}>
           <label>
             휴대폰 번호
-            <input type="tel" placeholder="010-0000-0000" />
+            <input
+              type="tel"
+              placeholder="010-0000-0000"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              required
+            />
           </label>
           <label>
             비밀번호
-            <input type="password" placeholder="비밀번호" />
+            <input
+              type="password"
+              placeholder="비밀번호"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
           </label>
           <button type="submit" className="login-btn">로그인</button>
         </form>

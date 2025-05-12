@@ -82,3 +82,32 @@
     cursor: pointer;
   }
   
+  .info-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  
+  .info-row label {
+    font-weight: bold;
+    min-width: 100px; /* 항목 이름 길이 통일 */
+    margin-right: 30px; /* label과 span 사이 여백 */
+    text-align: left;
+  }
+  
+  .info-row span {
+    text-align: left;
+  }
+  
+  .animal-info-section h3 {
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    padding: 12px 0;
+    margin: 24px 0 16px 0;
+    font-size: 18px;
+    font-weight: bold;
+  }
+  
+  
+  
+  

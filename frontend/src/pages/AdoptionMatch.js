@@ -1,5 +1,5 @@
-// src/pages/AdoptionMatch.js
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import MenuBar from '../components/MenuBar';
 import '../styles/AdoptionMatch.css';
@@ -34,6 +34,9 @@ const questions = [
 function AdoptionMatch() {
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState([]);
+  const [isFinished, setIsFinished] = useState(false);
+  const [recommendedAnimal, setRecommendedAnimal] = useState('');
+  const navigate = useNavigate();
 
   const handleSelect = (answer) => {
     const newAnswers = [...answers, answer];
@@ -41,31 +44,48 @@ function AdoptionMatch() {
     if (step < questions.length - 1) {
       setStep(step + 1);
     } else {
-      // 마지막 질문까지 끝나면 결과 페이지로 이동하거나 결과 계산
-      console.log('선택한 답변:', newAnswers);
-      alert('입양 후보 리스트를 불러옵니다!');
+      const type = '개';
+      const breed = '골든 리트리버';
+      setRecommendedAnimal(`${type} > ${breed}`);
+      setIsFinished(true);
     }
   };
 
-  const current = questions[step];
+  const handleViewList = () => {
+    navigate('/adopt/animals?type=개&breed=골든 리트리버');
+  };
 
   return (
     <div className="adoption-match-page">
       <Header />
       <MenuBar />
-      <div className="match-container">
-        <h2>입양 추천 질문 {step + 1} / {questions.length}</h2>
-        <h3>{current.question}</h3>
-        <div className="card-options">
-          {current.options.map((option, idx) => (
-            <div
-              key={idx}
-              className="option-card"
-              onClick={() => handleSelect(option)}
-            >
-              {option}
+      <div className="wrap">
+        <div className="match-container">
+          {!isFinished ? (
+            <>
+              <h2>입양 추천 질문 {step + 1} / {questions.length}</h2>
+              <h3>{questions[step].question}</h3>
+              <div className="card-options">
+                {questions[step].options.map((option, idx) => (
+                  <div
+                    key={idx}
+                    className="option-card"
+                    onClick={() => handleSelect(option)}
+                  >
+                    {option}
+                  </div>
+                ))}
+              </div>
+            </>
+          ) : (
+            <div className="result-area">
+              <h2>🎉 매칭 완료!</h2>
+              <p>추천하는 입양 동물은 <b>{recommendedAnimal}</b> 입니다.</p>
+              <div className="btn-group">
+                <button className="submit" onClick={handleViewList}>입양 리스트 보기</button>
+              </div>
             </div>
-          ))}
+          )}
         </div>
       </div>
     </div>

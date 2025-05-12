@@ -1,9 +1,18 @@
-// src/components/Header.js
-
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useContext } from 'react';
+import { UserContext } from '../context/UserContext';
 import '../styles/Header.css';
 
 function Header() {
+  const { user, setUser } = useContext(UserContext);
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    setUser(null);
+    localStorage.removeItem('user');
+    navigate('/');
+  };
+
   return (
     <header className="header">
       <div className="header-left">
@@ -15,12 +24,20 @@ function Header() {
       </div>
 
       <div className="header-right">
-        <Link to="/login" className="login">
-          <span className="icon">👤</span> 
-          <span className="label">로그인</span>
-        </Link>
+        {user ? (
+          <button className="login" onClick={handleLogout}>
+            <span className="icon">🔐</span>
+            <span className="label">로그아웃</span>
+          </button>
+        ) : (
+          <Link to="/login" className="login">
+            <span className="icon">🔓</span>
+            <span className="label">로그인</span>
+          </Link>
+        )}
+
         <button className="alarm-btn">
-          <span className="icon">🔔</span> 
+          <span className="icon">🔔</span>
           <span className="label">알림</span>
         </button>
       </div>

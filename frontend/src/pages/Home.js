@@ -5,22 +5,29 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import '../styles/MainSlider.css';
 import '../styles/AnimalGrid.css';
-
-import '../styles/Home.css';
+import '../styles/wrap.css';
 
 function Home() {
   const sliderImages = [
-    '/images/slider1.jpg',
-    '/images/slider1.jpg',
-    '/images/slider1.jpg',
+    '/images/slider1.png',
+    '/images/slider2.png',
+    '/images/slider3.png',
   ];
 
-  const animals = [
+  const dogs = [
     { id: 1, img: '/images/dog1.jpg'},
     { id: 2, img: '/images/dog2.jpg'},
     { id: 3, img: '/images/dog3.jpg'},
     { id: 4, img: '/images/dog4.jpg'},
     { id: 5, img: '/images/dog5.jpg'},
+  ];
+
+  const cats = [
+    { id: 1, img: '/images/cat1.jpg'},
+    { id: 2, img: '/images/cat2.jpg'},
+    { id: 3, img: '/images/cat3.jpg'},
+    { id: 4, img: '/images/cat4.jpg'},
+    { id: 5, img: '/images/cat5.jpg'},
   ];
 
   const sliderSettings = {
@@ -48,33 +55,33 @@ function Home() {
           ))}
         </Slider>
       </div>
+      <div className="wrap">
+        <div className="animal-grid">
+          <h2 className="section-title">최근 등록된 보호견 {'>'}</h2>
+          <div className="grid-container">
+            {dogs.map((animal) => (
+              <div className="animal-cards" key={animal.id}>
+                <a href={animal.link}>
+                  <img src={animal.img} alt="Animal" className="animal-img" />
+                </a>
+              </div>
+            ))}
+          </div>
+        </div>
 
-      <div className="animal-grid">
-        <h2 className="section-title">최근 등록된 보호견 {'>'}</h2>
-        <div className="grid-container">
-          {animals.map((animal) => (
-            <div className="animal-cards" key={animal.id}>
-              <a href={animal.link}>
-                <img src={animal.img} alt="Animal" className="animal-img" />
-              </a>
-            </div>
-          ))}
+        <div className="animal-grid">
+          <h2 className="section-title">최근 등록된 보호묘 {'>'}</h2>
+          <div className="grid-container">
+            {cats.map((animal) => (
+              <div className="animal-cards" key={animal.id}>
+                <a href={animal.link}>
+                  <img src={animal.img} alt="Animal" className="animal-img" />
+                </a>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
-
-      <div className="animal-grid">
-        <h2 className="section-title">최근 등록된 보호묘 {'>'}</h2>
-        <div className="grid-container">
-          {animals.map((animal) => (
-            <div className="animal-cards" key={animal.id}>
-              <a href={animal.link}>
-                <img src={animal.img} alt="Animal" className="animal-img" />
-              </a>
-            </div>
-          ))}
-        </div>
-      </div>
-
     </div>
   );
 }

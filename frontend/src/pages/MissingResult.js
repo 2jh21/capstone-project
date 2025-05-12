@@ -1,12 +1,15 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import MenuBar from '../components/MenuBar';
 import '../styles/MissingResult.css';
 import matches from '../data/dummyMatches';
+import '../styles/wrap.css';
 
 function MissingResult() {
   const [responses, setResponses] = useState({});
   const [showFailed, setShowFailed] = useState(true);
+  const navigate = useNavigate();
 
   const handleYes = (id) => {
     setResponses({ ...responses, [id]: 'yes' });
@@ -52,7 +55,9 @@ function MissingResult() {
           </ul>
           {response === 'no' && <p className="card-fail">매칭 실패</p>}
           {response === 'yes' && (
-            <button className="move-button">상세 페이지로 이동</button>
+            <button className="move-button" onClick={() => navigate(`/animal/${match.id}`)}>
+              상세 페이지로 이동
+            </button>
           )}
           {!response && (
             <div className="card-actions">
@@ -69,30 +74,32 @@ function MissingResult() {
     <div className="missing-result">
       <Header />
       <MenuBar />
-      <h2>매칭 결과</h2>
+      <div className="wrap">
+        <h2>매칭 결과</h2>
 
-      {grouped.unanswered.length > 0 && (
-        <div className="section">
-          <h3>답변 대기 중</h3>
-          {grouped.unanswered.map(renderCard)}
-        </div>
-      )}
+        {grouped.unanswered.length > 0 && (
+          <div className="section">
+            <h3>답변 대기 중</h3>
+            {grouped.unanswered.map(renderCard)}
+          </div>
+        )}
 
-      {grouped.matched.length > 0 && (
-        <div className="section">
-          <h3>매칭 성공</h3>
-          {grouped.matched.map(renderCard)}
-        </div>
-      )}
+        {grouped.matched.length > 0 && (
+          <div className="section">
+            <h3>매칭 성공</h3>
+            {grouped.matched.map(renderCard)}
+          </div>
+        )}
 
-      {grouped.failed.length > 0 && (
-        <div className="section">
-          <h3 className="collapsible-header" onClick={toggleShowFailed}>
-            매칭 실패 {showFailed ? '▶' : '▼'}
-          </h3>
-          {showFailed && grouped.failed.map(renderCard)}
-        </div>
-      )}
+        {grouped.failed.length > 0 && (
+          <div className="section">
+            <h3 className="collapsible-header" onClick={toggleShowFailed}>
+              매칭 실패 {showFailed ? '▶' : '▼'}
+            </h3>
+            {showFailed && grouped.failed.map(renderCard)}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

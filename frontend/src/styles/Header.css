@@ -78,3 +78,13 @@
   }
 }
 
+.login {
+  all: unset;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  font-size: 15px;
+  color: black;
+}
+
