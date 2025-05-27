@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from 'react';
 import Header from '../components/Header';
 import MenuBar from '../components/MenuBar';
 import Slider from 'react-slick';
@@ -6,28 +7,57 @@ import 'slick-carousel/slick/slick-theme.css';
 import '../styles/MainSlider.css';
 import '../styles/AnimalGrid.css';
 import '../styles/wrap.css';
+import axios from 'axios';
 
 function Home() {
+  const [dogs, setDogs] = useState([]);
+  const [cats, setCats] = useState([]);
+
+  useEffect(() => {
+    const today = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+
+    const fetchAnimals = async (upkind) => {
+      try {
+        const res = await axios.get('/api/animals/home', {
+          params: {
+            upkind,
+            bgnde: '20250501',
+            endde: today,
+            numOfRows: 10,
+          },
+        });
+        const items = res.data?.response?.body?.items?.item || [];
+        const list = Array.isArray(items) ? items : [items];
+        const sorted = list.sort((a, b) => b.happenDt.localeCompare(a.happenDt));
+        const formatted = sorted.map(animal => ({
+          id: animal.desertionNo,
+          img: animal.popfile1,
+          link: `/animal/${animal.desertionNo}`,
+          upkind: animal.upKindCd,
+        }));
+        return formatted;
+      } catch (err) {
+        console.error('fetch error:', err);
+        return [];
+      }
+    };
+
+    const loadAnimals = async () => {
+      const dogList = await fetchAnimals('417000');
+      const catList = await fetchAnimals('422400');
+      const filteredDogs = dogList.filter(animal => animal.upkind === '417000');
+      const filteredCats = catList.filter(animal => animal.upkind === '422400');
+      setDogs(filteredDogs.slice(0, 5));
+      setCats(filteredCats.slice(0, 5));
+    };
+
+    loadAnimals();
+  }, []);
+
   const sliderImages = [
     '/images/slider1.png',
     '/images/slider2.png',
     '/images/slider3.png',
-  ];
-
-  const dogs = [
-    { id: 1, img: '/images/dog1.jpg'},
-    { id: 2, img: '/images/dog2.jpg'},
-    { id: 3, img: '/images/dog3.jpg'},
-    { id: 4, img: '/images/dog4.jpg'},
-    { id: 5, img: '/images/dog5.jpg'},
-  ];
-
-  const cats = [
-    { id: 1, img: '/images/cat1.jpg'},
-    { id: 2, img: '/images/cat2.jpg'},
-    { id: 3, img: '/images/cat3.jpg'},
-    { id: 4, img: '/images/cat4.jpg'},
-    { id: 5, img: '/images/cat5.jpg'},
   ];
 
   const sliderSettings = {
@@ -62,7 +92,7 @@ function Home() {
             {dogs.map((animal) => (
               <div className="animal-cards" key={animal.id}>
                 <a href={animal.link}>
-                  <img src={animal.img} alt="Animal" className="animal-img" />
+                  <img src={animal.img} alt="Dog" className="animal-img" />
                 </a>
               </div>
             ))}
@@ -75,7 +105,7 @@ function Home() {
             {cats.map((animal) => (
               <div className="animal-cards" key={animal.id}>
                 <a href={animal.link}>
-                  <img src={animal.img} alt="Animal" className="animal-img" />
+                  <img src={animal.img} alt="Cat" className="animal-img" />
                 </a>
               </div>
             ))}

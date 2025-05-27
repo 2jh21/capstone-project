@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 import Header from '../components/Header';
 import MenuBar from '../components/MenuBar';
 import '../styles/MissingRegister.css';
@@ -15,12 +16,30 @@ function AdoptionRegister() {
     preferences: '',
   });
 
+  const [upkind, setUpkind] = useState('');
+  const [kindList, setKindList] = useState([]);
+  const [sidoList, setSidoList] = useState([]);
+
   const colors = ['흰색', '검정', '회색', '갈색', '노랑', '주황', '크림', '고동', '베이지', '상관없음'];
 
-  const breedsByType = {
-    강아지: ['푸들', '말티즈', '진돗개', '비숑', '포메라니안'],
-    고양이: ['코숏', '러시안블루', '페르시안', '스코티시폴드', '샴'],
-  };
+  useEffect(() => {
+    if (!upkind) {
+      setKindList([]);
+      return;
+    }
+
+    axios.get('/api/kind', { params: { up_kind_cd: upkind } }).then((res) => {
+      const items = res.data?.response?.body?.items?.item;
+      setKindList(Array.isArray(items) ? items : items ? [items] : []);
+    });
+  }, [upkind]);
+
+  useEffect(() => {
+    axios.get('/api/sido').then((res) => {
+      const items = res.data?.response?.body?.items?.item;
+      setSidoList(Array.isArray(items) ? items : items ? [items] : []);
+    });
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -46,33 +65,41 @@ function AdoptionRegister() {
               name="type"
               value={form.type}
               onChange={(e) => {
-                const selectedType = e.target.value;
+                const selected = e.target.value;
+                setUpkind(selected);
                 setForm({
                   ...form,
-                  type: selectedType,
+                  type: selected,
                   breed: '',
                 });
               }}
             >
               <option value="">선택하세요</option>
-              {Object.keys(breedsByType).map((type) => (
-                <option key={type} value={type}>{type}</option>
-              ))}
+              <option value="417000">강아지</option>
+              <option value="422400">고양이</option>
+              <option value="429900">기타</option>
             </select>
           </div>
 
-          {Array.isArray(breedsByType[form.type]) && (
+          {Array.isArray(kindList) && (
             <div className="form-group">
               <label>선호 품종</label>
               <select
                 name="breed"
                 value={form.breed}
                 onChange={handleChange}
+                disabled={!upkind}
               >
-                <option value="">선택하세요</option>
-                {breedsByType[form.type].map((breed) => (
-                  <option key={breed} value={breed}>{breed}</option>
-                ))}
+                {!upkind ? (
+                  <option value="">먼저 동물 종류를 선택해주세요</option>
+                ) : (
+                  <>
+                    <option value="">선택하세요</option>
+                    {kindList.map((item) => (
+                      <option key={item.kindCd} value={item.kindNm}>{item.kindNm}</option>
+                    ))}
+                  </>
+                )}
               </select>
             </div>
           )}
@@ -133,12 +160,9 @@ function AdoptionRegister() {
             <label>입양 희망 지역</label>
             <select name="region" value={form.region} onChange={handleChange}>
               <option value="">선택하세요</option>
-              <option value="서울">서울</option>
-              <option value="경기">경기</option>
-              <option value="부산">부산</option>
-              <option value="대구">대구</option>
-              <option value="인천">인천</option>
-              <option value="기타">기타</option>
+              {sidoList.map((item) => (
+                <option key={item.orgCd} value={item.orgdownNm}>{item.orgdownNm}</option>
+              ))}
             </select>
           </div>
 

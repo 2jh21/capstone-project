@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from '../components/Header';
 import MenuBar from '../components/MenuBar';
 import AnimalFilterBox from '../components/AnimalFilterBox';
@@ -6,112 +6,68 @@ import AnimalCardList from '../components/AnimalCardList';
 import '../styles/AnimalCardList.css';
 import '../styles/ProtectedAnimals.css';
 import '../styles/wrap.css';
-
-const dummyAnimals = [
-  {
-    id: 1,
-    image: '/images/protection1_cat1.jpg',
-    breed: '한국고양이 ♂',
-    details: '수컷 / 레몬색&흰색',
-    date: '2025-04-27',
-    location: '전라감영 화장실 쪽',
-  },
-  {
-    id: 2,
-    image: '/images/protection2_dog1.jpg',
-    breed: '믹스견 ♂',
-    details: '수컷 / 갈색',
-    date: '2025-04-26',
-    location: '나주시다시면 가운리 195',
-  },
-  {
-    id: 3,
-    image: '/images/protection3_cat1.jpg',
-    breed: '샴 ♀',
-    details: '암컷 / 크림색&암갈색',
-    date: '2025-04-26',
-    location: '하동 여흥로',
-  },
-  {
-    id: 4,
-    image: '/images/protection4_cat1.jpg',
-    breed: '한국 고양이 ♀',
-    details: '암컷 / 검은색&흰색&황토색',
-    date: '2025-04-26',
-    location: '나주시 동수농공단지길 78',
-  },
-  {
-    id: 5,
-    image: '/images/protection5_dog1.jpg',
-    breed: '믹스견 ♀',
-    details: '암컷 / 흰색&황갈색',
-    date: '2025-04-26',
-    location: '효성요양병원',
-  },
-  {
-    id: 6,
-    image: '/images/protection6_dog1.jpg',
-    breed: '골든 리트리버 ♂',
-    details: '수컷 / 크림색',
-    date: '2025-04-25',
-    location: '대교로 58 대천고등학교 로터리 인근',
-  },
-  {
-    id: 7,
-    image: '/images/protection7_dog1.jpg',
-    breed: '진도견 ♀',
-    details: '암컷 / 흰색',
-    date: '2025-04-24',
-    location: '성북로 60 서울농산물 앞',
-  },
-  {
-    id: 8,
-    image: '/images/protection8_cat1.jpg',
-    breed: '한국 고양이 ♀',
-    details: '암컷 / 검은색&흰색&황토색',
-    date: '2025-04-24',
-    location: '대명 시장 부근',
-  },
-  {
-    id: 9,
-    image: '/images/protection9_cat1.jpg',
-    breed: '한국 고양이 ♀',
-    details: '암컷 / 검은색&흰색',
-    date: '2025-04-24',
-    location: '광주시 회덕동 일대',
-  },
-  {
-    id: 10,
-    image: '/images/protection10_dog1.jpg',
-    breed: '골든 리트리버 ♂',
-    details: '수컷 / 크림색',
-    date: '2025-04-24',
-    location: '거제반려동물놀이터 참입',
-  },
-  {
-    id: 11,
-    image: '/images/protection11_dog1.png',
-    breed: '믹스견 ♂',
-    details: '수컷 / 갈색&검정&흰색',
-    date: '2025-04-21',
-    location: '경기도 양평군 양평읍 마유산로 315',
-  },
-  {
-    id: 12,
-    image: '/images/protection12_cat1.jpg',
-    breed: '노르웨이 숲 ♂',
-    details: '수컷 / 흰색&쿨무늬',
-    date: '2025-04-16',
-    location: '청라동 96-3',
-  }
-];
+import axios from 'axios';
 
 function ProtectedAnimals() {
-  const [animals, setAnimals] = useState(dummyAnimals);
+  const [animals, setAnimals] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 16;
 
-  const handleSearch = () => {
-    setAnimals(dummyAnimals);
+  const indexOfLast = currentPage * itemsPerPage;
+  const indexOfFirst = indexOfLast - itemsPerPage;
+  const currentAnimals = animals.slice(indexOfFirst, indexOfLast);
+
+  const formatDateInput = (date) => date.toISOString().slice(0, 10);
+
+  const handleSearch = (filters) => {
+    const today = new Date();
+    const twoWeeksAgo = new Date();
+    twoWeeksAgo.setDate(today.getDate() - 14);
+
+    const formatDateParam = (date) => date.toISOString().slice(0, 10).replace(/-/g, '');
+
+    const bgnde = filters.bgnde || formatDateParam(twoWeeksAgo);
+    const endde = filters.endde || formatDateParam(today);
+
+    axios.get('/api/animals', {
+      params: {
+        ...filters,
+        bgnde,
+        endde
+      }
+    })
+      .then((res) => {
+        const items = res.data?.response?.body?.items?.item;
+        const result = (Array.isArray(items) ? items : items ? [items] : []).map(animal => ({
+          id: animal.desertionNo,
+          image: animal.popfile1,
+          breed: `${animal.kindNm} ${animal.sexCd === 'M' ? '♂' : animal.sexCd === 'F' ? '♀' : ''}`,
+          details: `${animal.sexCd === 'M' ? '수컷' : animal.sexCd === 'F' ? '암컷' : '미상'} / ${animal.colorCd}`,
+          date: animal.happenDt.replace(/(\\d{4})(\\d{2})(\\d{2})/, '$1-$2-$3'),
+          location: animal.happenPlace,
+        }));
+        setAnimals(result);
+        setCurrentPage(1);
+      })
+      .catch(() => {
+        setAnimals([]);
+        setCurrentPage(1);
+      });
   };
+
+  useEffect(() => {
+    handleSearch({});
+  }, []);
+
+  const totalPages = Math.ceil(animals.length / itemsPerPage);
+  const pagesToShow = 10;
+  const currentGroup = Math.floor((currentPage - 1) / pagesToShow);
+  const startPage = currentGroup * pagesToShow + 1;
+  const endPage = Math.min(startPage + pagesToShow - 1, totalPages);
+
+  const today = new Date();
+  const twoWeeksAgo = new Date();
+  twoWeeksAgo.setDate(today.getDate() - 14);
 
   return (
     <div className="protected-animals">
@@ -120,8 +76,35 @@ function ProtectedAnimals() {
       <div className="wrap">
         <h2 className="page-title">보호 중인 동물</h2>
 
-        <AnimalFilterBox onSearch={handleSearch} />
-        <AnimalCardList animals={animals} />
+        <AnimalFilterBox
+          onSearch={handleSearch}
+          minDateLimit={formatDateInput(twoWeeksAgo)}
+          maxDateLimit={formatDateInput(today)}
+        />
+        <AnimalCardList animals={currentAnimals} />
+
+        {totalPages > 1 && (
+          <div className="pagination">
+            <button onClick={() => setCurrentPage(1)} disabled={currentPage === 1}>≪</button>
+            <button onClick={() => setCurrentPage(p => Math.max(p - 1, 1))} disabled={currentPage === 1}>◁</button>
+
+            {Array.from({ length: endPage - startPage + 1 }, (_, i) => {
+              const page = startPage + i;
+              return (
+                <button
+                  key={page}
+                  onClick={() => setCurrentPage(page)}
+                  className={currentPage === page ? 'active' : ''}
+                >
+                  {page}
+                </button>
+              );
+            })}
+
+            <button onClick={() => setCurrentPage(p => Math.min(p + 1, totalPages))} disabled={currentPage === totalPages}>▷</button>
+            <button onClick={() => setCurrentPage(totalPages)} disabled={currentPage === totalPages}>≫</button>
+          </div>
+        )}
       </div>
     </div>
   );

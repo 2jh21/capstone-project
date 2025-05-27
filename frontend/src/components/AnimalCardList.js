@@ -1,9 +1,10 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import '../styles/ProtectedAnimals.css';
 
 function AnimalCardList({ animals }) {
   const navigate = useNavigate();
+
+  if (!Array.isArray(animals)) return null;
 
   return (
     <div className="animal-list">
@@ -12,7 +13,7 @@ function AnimalCardList({ animals }) {
           className="animal-card"
           key={animal.id}
           onClick={() => navigate(`/animal/${animal.id}`)}
-          style={{ cursor: 'pointer' }} // 클릭 가능한 UI 느낌 추가
+          style={{ cursor: 'pointer' }}
         >
           <img src={animal.image} alt="animal" className="animal-image" />
           <div className="animal-info">
