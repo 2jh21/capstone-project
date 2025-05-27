@@ -9,6 +9,9 @@ const PORT = 4000;
 
 app.use(cors());
 
+const authRouter = require('./routes/auth'); 
+app.use('/auth', authRouter); 
+
 // 홈 화면용 API (최근 보호동물)
 app.get('/api/animals/home', async (req, res) => {
   try {
