@@ -1,4 +1,9 @@
-router.get('/auth/kakao/callback', async (req, res) => {
+const express = require('express');
+const router = express.Router();
+const axios = require('axios');
+const qs = require('qs');
+
+router.get('/kakao/callback', async (req, res) => {
     const { code } = req.query;
   
     try {
@@ -25,3 +30,5 @@ router.get('/auth/kakao/callback', async (req, res) => {
       res.status(500).json({ error: 'Kakao login failed' });
     }
   });  
+  
+module.exports = router;
