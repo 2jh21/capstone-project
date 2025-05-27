@@ -13,16 +13,23 @@ function LoginPage() {
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
 
+  const REST_API_KEY = '1bdd2796c0d723fd2ed5163f8aec5c87'; 
+  const REDIRECT_URI = 'http://localhost:3000/oauth/callback/kakao';
+  const kakaoLoginUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
+  
   const handleLogin = (e) => {
     e.preventDefault();
 
-    // 실제 로그인 로직 대신 가상 유저 처리
     const loggedInUser = { phone };
     setUser(loggedInUser);
     localStorage.setItem('user', JSON.stringify(loggedInUser));
     navigate('/');
   };
 
+  const handleKakaoLogin = () => {
+    window.location.href = kakaoLoginUrl;
+  };
+  
   return (
     <div className="login-page">
       <Header />
@@ -55,7 +62,9 @@ function LoginPage() {
 
         <div className="divider">또는</div>
 
-        <button className="kakao-btn">카카오톡으로 로그인</button>
+        <button className="kakao-btn" onClick={handleKakaoLogin}>
+          카카오톡으로 로그인
+        </button>
 
         <div className="signup-link">
           아직 계정이 없으신가요? <a href="/signup">회원가입</a>
