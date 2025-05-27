@@ -15,6 +15,7 @@ import MyPage from './pages/MyPage';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SingupPage';
 import AdoptionMatch from './pages/AdoptionMatch';
+import KakaoCallback from './pages/KakaoCallback';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -44,6 +45,7 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/adopt/match" element={<AdoptionMatch />} />
+        <Route path="/oauth/callback/kakao" element={<KakaoCallback />} />
       </Routes>
       </BrowserRouter>
     </UserContext.Provider>
