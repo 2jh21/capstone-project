@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const authRouter = require('./routes/auth');
 
 const app = express();
 const PORT = 5000;
@@ -19,6 +20,7 @@ mongoose.connect(DB_URI, {
 // 미들웨어 설정
 app.use(cors());
 app.use(bodyParser.json());
+app.use('/auth', authRouter);
 
 // 라우트 설정
 const exampleRoute = require('./routes/example');
