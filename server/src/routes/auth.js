@@ -1,4 +1,4 @@
-router.get('/auth/kakao', async (req, res) => {
+router.get('/auth/kakao/callback', async (req, res) => {
     const { code } = req.query;
   
     try {
