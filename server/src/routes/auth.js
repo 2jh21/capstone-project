@@ -11,7 +11,7 @@ router.get('/kakao/callback', async (req, res) => {
         'https://kauth.kakao.com/oauth/token',
         qs.stringify({
           grant_type: 'authorization_code',
-          client_id: '1bdd2796c0d723fd2ed5163f8aec5c87',
+          client_id: 'ca9b89ace9bbff6cdd5ddf07a2fe5a1c',
           redirect_uri: 'http://localhost:3000/oauth/callback/kakao',
           code,
         }),
