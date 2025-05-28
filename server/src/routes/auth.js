@@ -26,8 +26,8 @@ router.get('/kakao/callback', async (req, res) => {
   
       res.json(userResponse.data); // 프론트에 사용자 정보 전송
     } catch (err) {
-      console.error(err.response?.data || err.message);
-      res.status(500).json({ error: 'Kakao login failed' });
+      console.error('카카오 로그인 에러:', err.response?.data || err.message);
+      res.status(500).json({ error: 'Kakao login failed', detail: err.response?.data || err.message });
     }
   });  
   
