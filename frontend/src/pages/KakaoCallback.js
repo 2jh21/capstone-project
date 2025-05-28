@@ -23,7 +23,7 @@ function KakaoCallback() {
         console.error('카카오 로그인 실패:', err);
         alert('로그인에 실패했습니다.');
       });
-  }, []);
+  }, [navigate, setUser]);
 
   return <div>로그인 중입니다...</div>;
 }
