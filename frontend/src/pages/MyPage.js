@@ -1,8 +1,9 @@
 // src/pages/MyPage.js
-import React from 'react';
+import React, { useContext } from 'react';
 import Header from '../components/Header';
 import MenuBar from '../components/MenuBar';
 import '../styles/MyPage.css';
+import { UserContext } from '../context/UserContext';
 
 function MyPage() {
   return (
@@ -13,8 +14,8 @@ function MyPage() {
         <h2>마이페이지</h2>
         <div className="mypage-section">
           <h3>👤 내 정보</h3>
-          <p>이름: 홍길동</p>
-          <p>이메일: example@email.com</p>
+          <p>이름: {user?.properties?.nickname || user?.nickname || '홍길동'}</p>
+          <p>이메일: {user?.kakao_account?.email || user?.email || 'example@email.com'}</p>
         </div>
 
         <div className="mypage-section">
