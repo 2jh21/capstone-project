@@ -12,7 +12,7 @@ router.get('/kakao/callback', async (req, res) => {
         qs.stringify({
           grant_type: 'authorization_code',
           client_id: 'ca9b89ace9bbff6cdd5ddf07a2fe5a1c',
-          redirect_uri: 'http://localhost:4000/oauth/callback/kakao',
+          redirect_uri: 'http://localhost:3000/oauth/callback/kakao',
           code,
         }),
         { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }
