@@ -6,6 +6,8 @@ import '../styles/MyPage.css';
 import { UserContext } from '../context/UserContext';
 
 function MyPage() {
+  const { user, email } = useContext(UserContext);
+  
   return (
     <div className="mypage">
       <Header />
