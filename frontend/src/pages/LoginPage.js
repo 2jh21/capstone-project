@@ -14,7 +14,7 @@ function LoginPage() {
   const [password, setPassword] = useState('');
 
   const REST_API_KEY = 'ca9b89ace9bbff6cdd5ddf07a2fe5a1c'; 
-  const REDIRECT_URI = 'http://localhost:3000/oauth/callback/kakao';
+  const REDIRECT_URI = 'http://localhost:4000/oauth/callback/kakao';
   const kakaoLoginUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code&prompt=login`;
   
   const handleLogin = (e) => {
