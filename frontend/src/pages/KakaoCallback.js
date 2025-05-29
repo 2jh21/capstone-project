@@ -22,6 +22,9 @@ function KakaoCallback() {
       .catch((err) => {
         console.error('카카오 로그인 실패:', err);
         alert('로그인에 실패했습니다.');
+
+        localStorage.removeItem('user'); 
+        setUser(null); 
       });
   }, [navigate, setUser]);
 
