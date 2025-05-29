@@ -1,8 +1,9 @@
 // src/pages/MyPageEdit.js
-import React from 'react';
+import React, { useContext } from 'react';
 import Header from '../components/Header';
 import MenuBar from '../components/MenuBar';
 import '../styles/MyPage.css';
+import { UserContext } from '../context/UserContext';
 
 function MyPageEdit() {
   return (
@@ -14,11 +15,17 @@ function MyPageEdit() {
         <form className="mypage-section">
           <label>
             이름
-            <input type="text" defaultValue="홍길동" />
+            <input
+              type="text"
+              defaultValue={user?.properties?.nickname || user?.nickname || '홍길동'}
+            />
           </label>
           <label>
             이메일
-            <input type="email" defaultValue="example@email.com" />
+            <input
+              type="email"
+              defaultValue={user?.kakao_account?.email || user?.email || 'example@email.com'}
+            />
           </label>
           <label>
             비밀번호 변경
