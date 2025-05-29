@@ -6,7 +6,9 @@ import '../styles/MyPage.css';
 import { UserContext } from '../context/UserContext';
 
 function MyPageEdit() {
-  const { user, email } = useContext(UserContext);
+  const { user } = useContext(UserContext);  
+  const name = user?.name || '홍길동';      
+  const email = user?.email || 'example@email.com';
   
   return (
     <div className="mypage">
@@ -17,17 +19,11 @@ function MyPageEdit() {
         <form className="mypage-section">
           <label>
             이름
-            <input
-              type="text"
-              defaultValue={user?.properties?.nickname || user?.nickname || '홍길동'}
-            />
+            <input type="text" defaultValue={name} />
           </label>
           <label>
             이메일
-            <input
-              type="email"
-              defaultValue={user?.kakao_account?.email || user?.email || 'example@email.com'}
-            />
+            <input type="email" defaultValue={email} />
           </label>
           <label>
             비밀번호 변경
