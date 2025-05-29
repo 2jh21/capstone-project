@@ -23,7 +23,13 @@ function App() {
   useEffect(() => {
     const savedUser = localStorage.getItem('user');
     if (savedUser) {
-      setUser(JSON.parse(savedUser));
+      try {
+        setUser(JSON.parse(savedUser));
+      } catch (e) {
+        console.log('유저 정보 파싱 실패. 초기화.');
+        localStorage.removeItem('user');
+        setUser(null);
+      }
     }
   }, []);
   return (
