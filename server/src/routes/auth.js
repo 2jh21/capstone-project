@@ -7,7 +7,7 @@ router.get('/kakao/callback', async (req, res) => {
     const { code } = req.query;
   
     try {
-      const tokenResponse = await axios.post(
+      const tokenResponse = await axios.get(
         'https://kauth.kakao.com/oauth/token',
         qs.stringify({
           grant_type: 'authorization_code',
