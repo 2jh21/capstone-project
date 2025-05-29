@@ -9,6 +9,18 @@ function KakaoCallback() {
 
   useEffect(() => {
     const code = new URL(window.location.href).searchParams.get('code');
+    if (!code) return;
+
+    console.log('카카오 인가 코드:', code);
+
+    // 이미 처리한 코드인지 확인
+    const usedCode = sessionStorage.getItem('usedKakaoCode');
+    if (usedCode === code) {
+      console.log('이미 사용한 코드임. 요청 안 보냄.');
+      return; 
+    }
+
+    sessionStorage.setItem('usedKakaoCode', code);
 
     // 백엔드 서버에 인가 코드 전달
     axios
