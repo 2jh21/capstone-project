@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom'; // ✅ 추가
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Header from '../components/Header';
 import MenuBar from '../components/MenuBar';
@@ -18,18 +18,25 @@ function MissingRegister() {
     neutered: '',
     features: '',
     lostDate: today,
-    lostLocation: '',
+    sido: '',
     lostSituation: '',
     images: [],
   });
 
   const [upkind, setUpkind] = useState('');
   const [kindList, setKindList] = useState([]);
-
+  const [sidoList, setSidoList] = useState([]);
   const navigate = useNavigate();
 
   const colors = ['흰색', '검정', '회색', '갈색', '노랑', '주황', '크림', '고동', '베이지'];
-  const requiredFields = ['images', 'name', 'type', 'breed', 'colors', 'gender', 'lostDate', 'lostLocation'];
+  const requiredFields = ['images', 'name', 'type', 'breed', 'colors', 'gender', 'lostDate', 'sido'];
+
+  useEffect(() => {
+    axios.get('/api/sido').then((res) => {
+      const items = res.data?.response?.body?.items?.item;
+      setSidoList(Array.isArray(items) ? items : items ? [items] : []);
+    });
+  }, []);
 
   useEffect(() => {
     if (!upkind) {
@@ -55,39 +62,7 @@ function MissingRegister() {
       ...prevForm,
       images: [...prevForm.images, ...previews],
     }));
-
-    // const dummyPrediction = {
-    //   type: '강아지',
-    //   breed: '진도견',
-    //   colors: ['흰색'],
-    // };
-    // setPredictedData(dummyPrediction);
-    // setShowPopup(true);
-    // setQuestionIndex(0);
   };
-
-  // const [predictedData, setPredictedData] = useState(null);
-  // const [showPopup, setShowPopup] = useState(false);
-  // const [questionIndex, setQuestionIndex] = useState(0);
-
-  // const handleAnswer = (isYes) => {
-  //   if (!predictedData) return;
-  //   const field = ['type', 'breed', 'colors'][questionIndex];
-
-  //   if (isYes) {
-  //     if (field === 'colors') {
-  //       setForm({ ...form, colors: predictedData.colors });
-  //     } else {
-  //       setForm({ ...form, [field]: predictedData[field] });
-  //     }
-  //   }
-
-  //   if (questionIndex === 2) {
-  //     setShowPopup(false);
-  //   } else {
-  //     setQuestionIndex((prev) => prev + 1);
-  //   }
-  // };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -132,9 +107,6 @@ function MissingRegister() {
             </div>
           </div>
 
-          {/* 팝업 제거 */}
-          {/* {showPopup && predictedData && (...) } */}
-
           <div className="form-group">
             <label>이름</label>
             <input name="name" placeholder="이름" value={form.name} onChange={handleChange} />
@@ -146,7 +118,7 @@ function MissingRegister() {
               name="type"
               value={form.type}
               onChange={(e) => {
-                setUpkind(e.target.value); // API 호출
+                setUpkind(e.target.value);
                 setForm({ ...form, type: e.target.value, breed: '' });
               }}
             >
@@ -227,8 +199,17 @@ function MissingRegister() {
           </div>
 
           <div className="form-group">
-            <label>실종장소</label>
-            <input name="lostLocation" value={form.lostLocation} onChange={handleChange} />
+            <label>시도</label>
+            <select
+              name="sido"
+              value={form.sido}
+              onChange={handleChange}
+            >
+              <option value="">선택하세요</option>
+              {sidoList.map((s) => (
+                <option key={s.orgCd} value={s.orgCd}>{s.orgdownNm}</option>
+              ))}
+            </select>
           </div>
 
           <div className="form-group">
